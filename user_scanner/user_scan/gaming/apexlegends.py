@@ -1,8 +1,9 @@
 from user_scanner.core.orchestrator import status_validate
 
+
 def validate_apexlegends(user):
     url = f"https://api.tracker.gg/api/v2/apex/standard/profile/origin/{user}"
-    show_url = f"https://apexlegends.com"
+    show_url = "https://apexlegends.com"
 
     headers = {
         "Accept-Language": "en-US,en;q=0.5",
