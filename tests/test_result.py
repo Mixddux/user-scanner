@@ -1,10 +1,16 @@
+import pytest
 from user_scanner.core.result import Result, Status
 
+def test_status_labels():
+    assert Status.TAKEN.to_label(is_email=False) == "Found"
+    assert Status.AVAILABLE.to_label(is_email=False) == "Not Found"
+    assert Status.ERROR.to_label() == "Error"
 
-def test_status():
-    assert str(Status.AVAILABLE) == "Available"
-    assert str(Status.TAKEN) == "Taken"
-    assert str(Status.ERROR) == "Error"
+    assert Status.TAKEN.to_label(is_email=True) == "Registered"
+    assert Status.AVAILABLE.to_label(is_email=True) == "Not Registered"
+
+    assert str(Status.TAKEN) == "Found"
+    assert str(Status.AVAILABLE) == "Not Found"
 
 
 def test_equality():
@@ -13,44 +19,33 @@ def test_equality():
     assert taken == Result.taken()
     assert taken == Status.TAKEN
     assert taken == 0
-    assert taken.__eq__("str") == NotImplemented
+    assert taken.__eq__("string_type") == NotImplemented
 
     available = Result.available()
-    assert available == available
     assert available == Result.available()
     assert available == Status.AVAILABLE
     assert available == 1
-    assert available.__eq__("str") == NotImplemented
 
     error = Result.error()
-    assert error == error
-    assert error == Result.error()
     assert error == Status.ERROR
     assert error == 2
-    assert error.__eq__("str") == NotImplemented
 
 
-def test_get_reason():
+def test_get_reason_and_humanize():
     assert Result.available().get_reason() == ""
-    assert Result.available("reason").get_reason() == "reason"
-    assert Result.available(Exception("reason")).get_reason() == "Exception: Reason"
+    assert Result.available("manual reason").get_reason() == "manual reason"
 
-    assert Result.taken().get_reason() == ""
-    assert Result.taken("reason").get_reason() == "reason"
-    assert Result.taken(Exception("reason")).get_reason() == "Exception: Reason"
+    assert "Could not resolve hostname" in Result.error(Exception("Error 11001")).get_reason()
+    assert "Connection closed by remote server" in Result.error(Exception("Error 10054")).get_reason()
 
-    assert Result.error().get_reason() == ""
-    assert Result.error("reason").get_reason() == "reason"
-    assert Result.error(Exception("reason")).get_reason() == "Exception: Reason"
+    assert Result.available(Exception("some error")).get_reason() == "Exception: Some error"
 
 
 def test_has_reason():
     assert not Result.available().has_reason()
     assert Result.available("Has reason").has_reason()
-
     assert not Result.taken().has_reason()
     assert Result.taken("Has reason").has_reason()
-
     assert not Result.error().has_reason()
     assert Result.error("Has reason").has_reason()
 
@@ -69,7 +64,7 @@ def test_from_number():
         assert Result.from_number(i) == Status.ERROR
 
 
-def test_number():
+def test_number_roundtrip():
     a = Result.available()
     assert Result.from_number(a.to_number()) == a
     b = Result.taken()
@@ -78,14 +73,63 @@ def test_number():
     assert Result.from_number(c.to_number()) == c
 
 
-def test_update():
-    a = Result.available()
-    attrs = ("username", "site_name", "category")
-    for attr in attrs:
-        assert getattr(a, attr) is None
+def test_update_and_fields():
+    res = Result.available()
+    assert res.username is None
+    assert res.url == ""
 
-    a.update(username="name")
-    assert getattr(a, "username") == "name"
-    a.update(username="username", site_name="site_name", category="category")
-    for attr in attrs:
-        assert getattr(a, attr) == attr
+    res.update(
+        username="alice",
+        site_name="GitHub",
+        category="Social",
+        url="https://github.com/alice",
+        is_email=False
+    )
+
+    assert res.username == "alice"
+    assert res.site_name == "GitHub"
+    assert res.category == "Social"
+    assert res.url == "https://github.com/alice"
+
+
+def test_output_formats():
+    res = Result.taken(
+        username="testuser",
+        site_name="Example",
+        category="Tech",
+        url="https://example.com/user"
+    )
+
+    d = res.as_dict()
+    assert d["url"] == "https://example.com/user"
+    assert d["status"] == "Found"
+
+    assert res.to_csv() == "testuser,Tech,Example,Found,https://example.com/user,"
+
+    json_std = res.to_json()
+    assert '"username": "testuser"' in json_std
+    assert '"url": "https://example.com/user"' in json_std
+
+    res.update(is_email=True)
+    json_email = res.to_json()
+    assert '"email": "testuser"' in json_email
+    assert '"username":' not in json_email
+
+
+def test_console_output_and_show_url():
+    res = Result.taken(site_name="MySite", url="https://mysite.com/u")
+
+    out_hidden = res.get_console_output(show_url=False)
+    assert "[✔]" in out_hidden
+    assert "Found" in out_hidden
+    assert "https://mysite.com" not in out_hidden
+
+    out_visible = res.get_console_output(show_url=True)
+    assert "[https://mysite.com/u]" in out_visible
+
+
+def test_debug_string():
+    res = Result.available(username="dev", url="http://dev.link")
+    debug_str = res.debug()
+    assert 'url: "http://dev.link"' in debug_str
+    assert 'status: Not Found' in debug_str

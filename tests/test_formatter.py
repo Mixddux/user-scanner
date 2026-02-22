@@ -22,7 +22,7 @@ def test_get_result_output_formats():
         username="alice", site_name="ExampleSite", category="Cat")
 
     out_console = res.get_console_output()
-    assert "Available" in out_console
+    assert "Not Found" in out_console
     assert "ExampleSite" in out_console
     assert "alice" in out_console
 
