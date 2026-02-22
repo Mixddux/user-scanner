@@ -1,4 +1,3 @@
-import pytest
 from user_scanner.core.result import Result, Status
 
 def test_status_labels():
