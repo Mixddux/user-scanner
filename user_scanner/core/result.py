@@ -45,7 +45,7 @@ class Status(Enum):
             return "Error"
         if is_email:
             return "Registered" if self == Status.TAKEN else "Not Registered"
-        return "Taken" if self == Status.TAKEN else "Available"
+        return "Found" if self == Status.TAKEN else "Not Found"
 
     def __str__(self):
         return self.to_label(is_email=False)
@@ -141,18 +141,14 @@ class Result:
     def get_output_color(self) -> str:
         if self == Status.ERROR:
             return Fore.YELLOW
-        elif self.is_email:
-            return Fore.GREEN if self == Status.TAKEN else Fore.RED
         else:
-            return Fore.GREEN if self == Status.AVAILABLE else Fore.RED
+            return Fore.GREEN if self == Status.TAKEN else Fore.RED
 
     def get_output_icon(self) -> str:
         if self == Status.ERROR:
             return "[!]"
-        elif self.is_email:
-            return "[✔]" if self == Status.TAKEN else "[✘]"
         else:
-            return "[✔]" if self == Status.AVAILABLE else "[✘]"
+            return "[✔]" if self == Status.TAKEN else "[✘]"
 
     def get_console_output(self, show_url=False) -> str:
         site_name = self.site_name
