@@ -96,6 +96,10 @@ def main():
         help="Validate proxies before scanning (tests against google.com)")
 
     parser.add_argument(
+        "--only-found", action="store_true",
+        help="Only show sites where the username/email was found")
+
+    parser.add_argument(
         "-U", "--update", action="store_true", help="Update the tool")
 
     parser.add_argument("--version", action="store_true", help="Print version")
@@ -267,7 +271,7 @@ def main():
             fn = run_email_module_batch if is_email else run_user_module
             if modules:
                 for module in modules:
-                    results.extend(fn(module, target, show_url=args.verbose))
+                    results.extend(fn(module, target, show_url=args.verbose, only_found=args.only_found))
             else:
                 print(
                     R +
@@ -279,7 +283,7 @@ def main():
             cat_path = load_categories(is_email).get(args.category)
             fn = run_email_category_batch if is_email else run_user_category
             if cat_path:
-                results.extend(fn(cat_path, target, show_url=args.verbose))
+                results.extend(fn(cat_path, target, show_url=args.verbose, only_found=args.only_found))
             else:
                 print(
                     R +
@@ -288,7 +292,7 @@ def main():
                 )
         else:
             fn = run_email_full_batch if is_email else run_user_full
-            results.extend(fn(target, show_url=args.verbose))
+            results.extend(fn(target, show_url=args.verbose, only_found=args.only_found))
 
     if args.output:
         content = formatter.into_csv(
