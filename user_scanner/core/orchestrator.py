@@ -29,19 +29,19 @@ def _worker_single(module: ModuleType, username: str) -> Result:
         return Result.error(e, site_name=site_name, username=username)
 
 
-def run_user_module(module: ModuleType, username: str, show_url: bool = False) -> List[Result]:
+def run_user_module(module: ModuleType, username: str, show_url: bool = False, only_found: bool = False) -> List[Result]:
     result = _worker_single(module, username)
 
     category = find_category(module)
     if category:
         result.update(category=category)
 
-    print(result.get_console_output(show_url=show_url))
+    result.show(show_url=show_url, only_found=only_found)
 
     return [result]
 
 
-def run_user_category(category_path: Path, username: str, show_url: bool = False) -> List[Result]:
+def run_user_category(category_path: Path, username: str, show_url: bool = False, only_found: bool = False) -> List[Result]:
     category_name = category_path.stem.capitalize()
     print(f"\n{Fore.MAGENTA}== {category_name} SITES =={Style.RESET_ALL}")
 
@@ -53,12 +53,12 @@ def run_user_category(category_path: Path, username: str, show_url: bool = False
         for result in exec_map:
             result.update(category=category_name)
             results.append(result)
-            result.show(show_url=show_url)
+            result.show(show_url=show_url, only_found=only_found)
 
     return results
 
 
-def run_user_full(username: str, show_url: bool = False) -> List[Result]:
+def run_user_full(username: str, show_url: bool = False, only_found: bool = False) -> List[Result]:
     results = []
     all_modules = []
     categories = list(load_categories().items())
@@ -85,7 +85,7 @@ def run_user_full(username: str, show_url: bool = False) -> List[Result]:
 
             result.update(category=cat_name)
             results.append(result)
-            result.show(show_url=show_url)
+            result.show(show_url=show_url, only_found=only_found)
 
     return results
 
