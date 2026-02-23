@@ -16,15 +16,3 @@ def validate_reddit(user):
             return Result.error()
 
     return generic_validate(url, process, show_url=show_url, follow_redirects=True)
-
-
-if __name__ == "__main__":
-    user = input("Username?: ").strip()
-    result = validate_reddit(user)
-
-    if result == 1:
-        print("Available!")
-    elif result == 0:
-        print("Unavailable!")
-    else:
-        print("Error occurred!")
