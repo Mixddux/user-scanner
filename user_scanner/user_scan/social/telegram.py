@@ -1,4 +1,5 @@
 import re
+
 from user_scanner.core.orchestrator import generic_validate
 from user_scanner.core.result import Result
 
@@ -16,15 +17,3 @@ def validate_telegram(user: str) -> Result:
         return Result.error()
 
     return generic_validate(url, process, show_url=show_url, follow_redirects=True)
-
-
-if __name__ == "__main__":
-    user = input("Username?: ").strip()
-    result = validate_telegram(user)
-
-    if result == 1:
-        print("Available!")
-    elif result == 0:
-        print("Unavailable!")
-    else:
-        print("Error occurred!")
