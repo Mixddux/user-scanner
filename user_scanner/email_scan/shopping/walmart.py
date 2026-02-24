@@ -20,8 +20,7 @@ async def _check(email: str) -> Result:
     uid = str(uuid.uuid4()).replace("-", "")
     trace_id = f"00-{uid[:32]}-{uid[:16]}-00"
     # Use a shorter correlation ID format seen in recent captures
-    corr_id = secrets.token_urlsafe(24) 
-    current_ts = int(time.time() * 1000)
+    corr_id = secrets.token_urlsafe(24)
     dynamic_challenge = generate_pkce_challenge()
 
     payload = {
@@ -83,7 +82,7 @@ async def _check(email: str) -> Result:
 
             if response.status_code == 429:
                 return Result.error("Rate limited")
-            
+
             if response.status_code == 412:
                 return Result.error("Precondition Failed (412) - Walmart detected session mismatch")
 
