@@ -271,7 +271,7 @@ def main():
             fn = run_email_module_batch if is_email else run_user_module
             if modules:
                 for module in modules:
-                    results.extend(fn(module, target, show_url=args.verbose, only_found=args.only_found))
+                    results.extend(fn(module, target, show_url=args.verbose))
             else:
                 print(
                     R +
@@ -328,7 +328,15 @@ def main():
                 f.write(content)
 
         print(G + f"\n[+] Results saved to {args.output}" + Style.RESET_ALL)
+    total_found = len([r for r in results if r.is_found()])
 
+    if args.only_found:
+        if total_found == 0:
+            print(f"\n{R}[✘] No results found for the given target(s).{X}")
+        else:
+            print(f"\n{G}[✔] Total hits found:{X} {total_found}")
+    else:
+        print(f"\n{C}[i] Scan complete. Total hits:{X} {total_found}")
 
 if __name__ == "__main__":
     main()

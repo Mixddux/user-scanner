@@ -166,6 +166,11 @@ class Result:
         reason = f" ({self.get_reason()})" if self.has_reason() else ""
         return f"  {color}{icon} {site_name}{url_display} {username}: {status_text}{reason}{Style.RESET_ALL}"
 
+    def is_found(self) -> bool:
+        """Returns True if the target was found or registered (Status.TAKEN)"""
+        return self.status == Status.TAKEN
+
+
     def show(self, show_url=False, only_found=False):
         """Prints the console output and returns itself for chaining.
         If only_found is True, only results with Status.TAKEN are printed."""
