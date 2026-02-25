@@ -14,6 +14,6 @@ def validate_anonup(user):
         if "Page not found!" in response.text or response.status_code == 302:
             return Result.available()
 
-        return Result.error(f"Unexpected response body!")
+        return Result.error("Unexpected response body!")
 
     return generic_validate(url, process, show_url=show_url)
