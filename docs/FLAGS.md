@@ -6,6 +6,7 @@
 | `-e, --email EMAIL`       | Scan a single email across platforms |
 | `-uf, --username-file FILE` | Scan multiple usernames from file (one per line) |
 | `-ef, --email-file FILE`  | Scan multiple emails from file (one per line) |
+| `--only-found`            | Only show sites where the username/email was found|
 | `-c, --category CATEGORY` | Scan all platforms in a specific category |
 | `-lu, --list-user`        | List all available modules for username scanning |
 | `-le, --list-email`       | List all available modules for email scanning |

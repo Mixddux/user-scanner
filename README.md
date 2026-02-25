@@ -155,10 +155,17 @@ This will:
 2. Save working proxies to `validated_proxies.txt`
 3. Use only validated proxies for scanning
 
+### Screenshots:
+**Note**: Screenshots might be outdated
 
 ---
+<img width="1076" height="1150" alt="1000174715" src="https://github.com/user-attachments/assets/c5432f75-0dd4-4c19-a900-3093ef56e5ca" />
+
+---
+<img width="1080" height="1020" alt="1000174716" src="https://github.com/user-attachments/assets/c1469146-423d-463e-8a29-2a7c3e27c13e" />
 
 
+---
 ## ❤️ Support the project
 
 If this project helps you, consider supporting its development:
