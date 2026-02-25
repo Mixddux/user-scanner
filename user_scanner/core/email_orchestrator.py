@@ -1,8 +1,7 @@
 import asyncio
 from pathlib import Path
 from types import ModuleType
-from typing import List
-
+from typing import List, Optional, Set
 from colorama import Fore, Style
 
 from user_scanner.core.helpers import find_category, load_categories, load_modules
@@ -14,7 +13,7 @@ MAX_CONCURRENT_REQUESTS = 25
 
 async def _async_worker(module: ModuleType, email: str, sem: asyncio.Semaphore,
                         show_url: bool = False, only_found: bool = False,
-                        printed_cats: set = None) -> Result:
+                        printed_cats: Optional[Set] = None) -> Result:
     async with sem:
         module_name = module.__name__.split(".")[-1]
         func_name = f"validate_{module_name}"
@@ -55,7 +54,7 @@ async def _async_worker(module: ModuleType, email: str, sem: asyncio.Semaphore,
 
 
 async def _run_batch(modules: List[ModuleType], email: str, show_url: bool = False,
-                     only_found: bool = False, printed_cats: set = None) -> List[Result]:
+                     only_found: bool = False, printed_cats: Optional[Set] = None) -> List[Result]:
     sem = asyncio.Semaphore(MAX_CONCURRENT_REQUESTS)
     tasks = []
     for module in modules:
