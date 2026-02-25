@@ -1,19 +1,18 @@
-from user_scanner.core.orchestrator import status_validate
+from user_scanner.core.orchestrator import generic_validate, Result
+
 
 def validate_anonup(user):
     url = f"https://anonup.com/@{user}"
     show_url = "https://anonup.com"
 
-    return status_validate(url, 302, 200, show_url=show_url)
+    def process(response):
 
+        if "Show followings" in response.text:
+            return Result.taken()
 
-if __name__ == "__main__":
-    user = input("Username?: ").strip()
-    result = validate_anonup(user)
+        if "Page not found!" in response.text or response.status_code == 302:
+            return Result.available()
 
-    if result == 1:
-        print("Available!")
-    elif result == 0:
-        print("Unavailable!")
-    else:
-        print("Error occurred!")
+        return Result.error(f"Unexpected response body!")
+
+    return generic_validate(url, process, show_url=show_url)
