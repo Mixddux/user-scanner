@@ -36,8 +36,3 @@ def validate_vinted(user: str):
             return Result.taken()
 
     return generic_validate(url, process, show_url=show_url)
-
-
-if __name__ == "__main__":
-    user = input("Username?: ").strip()
-    validate_vinted(user).show()
