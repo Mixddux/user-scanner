@@ -159,10 +159,12 @@ This will:
 **Note**: Screenshots might be outdated
 
 ---
-<img width="1076" height="1150" alt="1000174715" src="https://github.com/user-attachments/assets/c5432f75-0dd4-4c19-a900-3093ef56e5ca" />
+<img width="1080" height="1350" alt="1000175086" src="https://github.com/user-attachments/assets/c90396d6-b8d9-4ea3-aac4-d2086f9b5756" />
+
 
 ---
-<img width="1080" height="1020" alt="1000174716" src="https://github.com/user-attachments/assets/c1469146-423d-463e-8a29-2a7c3e27c13e" />
+<img width="1080" height="730" alt="1000175084" src="https://github.com/user-attachments/assets/b399b924-6c4a-4b5b-af0d-67f7c0b39436" />
+
 
 
 ---
