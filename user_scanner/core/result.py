@@ -156,12 +156,12 @@ class Result:
         username = ""
         if self.username:
             username = f"({self.username})"
-        
-        # Added logic to include URL in console output if show_url is True
-        url_display = f" [{self.url}]" if show_url and self.url else ""
-
         color = self.get_output_color()
         icon = self.get_output_icon()
+
+        # Added logic to include URL in console output if show_url is True
+        ## Color the URL in white for better visibility
+        url_display = f" {Fore.WHITE}[{self.url}]{color}" if show_url and self.url else ""
 
         reason = f" ({self.get_reason()})" if self.has_reason() else ""
         return f"  {color}{icon} {site_name}{url_display} {username}: {status_text}{reason}{Style.RESET_ALL}"
